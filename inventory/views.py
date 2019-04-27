@@ -1,8 +1,27 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .form import HelloForm
+from django.views.generic import TemplateView
+from .form import InventoryForm
 
 
+class InventoryView(TemplateView):
+    def __init__(self):
+        self.params = {
+            'title': 'Hello',
+            'message': 'your date',
+            'form': InventoryForm()
+        }
+
+    def get(self, request):
+        return render(request, 'inventory/index.html', self.params)
+
+    def post(self, request):
+        msg = 'あなたは<b>' + request.POST['name'] + \
+            '(' + request.POST['age'] + \
+            'メールアドレス：' + request.POST['mail'] + \
+            'です。'
+        self.params['message'] = msg
+        self.params['form'] = H
 # def index(request, id, nickname):
 def index(request):
     # if 'id' in request.GET:
@@ -15,13 +34,13 @@ def index(request):
         'title': 'Hello/Index',
         'msg': 'これはサンプル',
         # 'goto': 'next',
-        'form': HelloForm()
+        'form': InventoryForm()
     }
     if(request.method == 'POST'):
         params['message'] = '名前：' + request.POST['name'] + \
             '<br>メール：' + request.POST['mail'] + \
             '<br>年齢：' + request.POST['age']
-        params['form'] = HelloForm(request.POST)
+        params['form'] = InventoryForm(request.POST)
 
     # return HttpResponse(request, 'hello/index.html')
     return render(request, 'inventory/index.html', params)
