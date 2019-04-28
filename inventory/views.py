@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import TemplateView
-from .form import InventoryForm
+from .forms import InventoryForm
 
 
 class InventoryView(TemplateView):
@@ -19,9 +19,19 @@ class InventoryView(TemplateView):
         msg = 'あなたは<b>' + request.POST['name'] + \
             '(' + request.POST['age'] + \
             'メールアドレス：' + request.POST['mail'] + \
-            'です。'
+            'です。' + request.POST['nullCheck'] + request.POST['choice'] + \
+            'ラジオは' + request.POST['radio'] + \
+            '複数選択は' + str(request.POST.getlist('multi'))
+
+        if('check' in request.POST):
+            msg += 'Checked!!'
+        else:
+            msg += 'not Checked!!'
         self.params['message'] = msg
-        self.params['form'] = H
+        self.params['form'] = InventoryForm(request.POST)
+        return render(request, 'inventory/index.html', self.params)
+
+
 # def index(request, id, nickname):
 def index(request):
     # if 'id' in request.GET:
